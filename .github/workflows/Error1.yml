@@ -1,16 +1,32 @@
 name: Error1
-# Contrôler quand le workflow va s’exécuter
 on:
-# Déclenche le workflow quand il y a un push ou un pull request sur la branche “main”
 push:
 branches: [ "main" ]
 pull_request:
-branches: [ "main" ]
+branches: [ "feature" ]
+# Allows you to run this workflow manually from the Actions tab
+workflow_dispatch:
+inputs:
+os:
+description: 'OS action'
+default: 'ubuntu-latest'
+required: true
+type: string
+surname:
+description: 'Nom utilisateur'
+default: 'john-doe'
+required: true
+type: string
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-# Ce workflow contient un seul job appelé “build”
+# This workflow contains a single job called "build"
 build:
-runs-on: ${{ inputs.os }}
+# The type of runner that the job will run on
+runs-on: ${{ inputs.os || 'ubuntu-latest' }}
+# Steps represent a sequence of tasks that will be executed as part of the job
 steps:
+# Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 - uses: actions/checkout@v4
+# Runs a single command using the runners shell
 - name: Run a one-line script
-run: eho Hello, ${{ inputs.surname }}!
+run: echo Hello, ${{ inputs.surname || 'john-doe' }} !
